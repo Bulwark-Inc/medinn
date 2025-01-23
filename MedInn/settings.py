@@ -35,14 +35,28 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser'
+# ACCOUNT_SIGNUP_FORM_CLASS = 'users.forms.CustomSignupForm'
+ACCOUNT_FORMS = {
+    'signup': 'users.forms.CustomSignupForm',
+}
+
 
 # Allauth settings
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-LOGIN_REDIRECT_URL = '/'  # Redirect after login
-LOGOUT_REDIRECT_URL = '/'  # Redirect after logout
+ACCOUNT_EMAIL_REQUIRED = True  # Ensure email is mandatory during signup
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # Email verification is compulsory
+ACCOUNT_AUTHENTICATION_METHOD = "email"  # Use email as the primary method for authentication
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True  # Allow email confirmation via a GET request
+
+# Redirect users after email verification
+LOGIN_REDIRECT_URL = '/users/dashboard/'  # After login or email verification
+ACCOUNT_SIGNUP_REDIRECT_URL = '/accounts/email-verification-sent/'  # After signup, before verification
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'  # Redirect after logout
+
+# Email backend (for development purposes, use console backend; use real SMTP in production)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Default "from" email address for sending emails
+DEFAULT_FROM_EMAIL = 'noreply@medinn.com'
 
 SITE_ID = 1
 
@@ -54,11 +68,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',  # Required for django-allauth
+    # for ckeditor
+    'ckeditor',
+    'ckeditor_uploader',
     # for allauth configuration
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     # custom apps
+    'main',
     'blogs',
     'forums',
     'notifications',
@@ -76,6 +94,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'middleware.role_middleware.RoleBasedAccessMiddleware',
 ]
 
 ROOT_URLCONF = 'MedInn.urls'
@@ -144,7 +163,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = 'staticfiles/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+# CKEditor configuration
+CKEDITOR_UPLOAD_PATH = "uploads/ckeditor/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

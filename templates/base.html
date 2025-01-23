@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MedInn{% endblock %}</title>
+    
+    <!-- Add any external stylesheets or fonts here -->
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <a href="#" class="logo">MedInn</a>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Blogs</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">About</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#">Logout</a></li>
+                    {% else %}
+                        <li><a href="#">Login</a></li>
+                        <li><a href="#">Register</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="content">
+            {% block content %}
+            <!-- Dynamic page content will go here -->
+             <h1>Hello World</h1>
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 MedInn. All rights reserved.</p>
+        <ul>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+        </ul>
+    </footer>
+</body>
+</html>

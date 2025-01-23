@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to MedInn{% endblock %}
+
+{% block content %}
+<div class="landing-page">
+    {% if user.is_authenticated %}
+        {% if 'is_admin' %}
+            <p>Welcome, Admin! <a href="{% url 'dashboard' %}">Go to Dashboard</a></p>
+        {% elif 'is_student' %}
+            <p>Welcome, Student! <a href="{% url 'dashboard' %}">Go to Dashboard</a></p>         
+        {% endif %}
+        <p>Your one-stop platform for medical students to learn, shop, and connect.</p>
+    {% else %}
+        <h1>Welcome to MedInn</h1>
+        <p>Your one-stop platform for medical students to learn, shop, and connect.</p>
+        <a href="/accounts/login/" class="btn">Login</a>
+        <a href="/accounts/signup/" class="btn">Sign Up</a>
+    {% endif %}
+</div>
+{% endblock %}

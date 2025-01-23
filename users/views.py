@@ -5,7 +5,7 @@ from django.http import HttpResponseForbidden
 @login_required
 def dashboard(request):
     is_admin = request.user.groups.filter(name='admin').exists()
-    is_student = request.user.groups.filter(name='tudent').exists()
+    is_student = request.user.groups.filter(name='student').exists()
     context = [
         {'is_student': is_student},
         {'is_admin': is_admin}
