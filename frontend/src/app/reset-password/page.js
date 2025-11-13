@@ -3,8 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/features/auth/context/AuthContext';
+import useRedirectIfAuthenticated from '@/utils/useRedirectIfAuthenticated';
 
 export default function ResetPasswordPage() {
+  useRedirectIfAuthenticated();
+
   const { resetPassword } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();

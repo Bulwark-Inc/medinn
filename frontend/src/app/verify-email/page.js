@@ -3,8 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import api from '@/utils/api';
+import useRedirectIfAuthenticated from '@/utils/useRedirectIfAuthenticated';
 
 export default function VerifyEmailPage() {
+  useRedirectIfAuthenticated();
+
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get('token');

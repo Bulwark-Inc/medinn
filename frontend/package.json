@@ -3,14 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -H 0.0.0.0 -p 3000 --turbopack",
+    "dev": "next dev -H 0.0.0.0 -p 5173 --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.5",
     "axios": "^1.12.2",
-    "next": "15.5.6",
+    "next": "^16.0.1",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },

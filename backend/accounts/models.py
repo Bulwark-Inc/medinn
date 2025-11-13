@@ -5,7 +5,7 @@ import random
 import string
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(self, email, password=None, is_seller=False, **extra_fields):
         if not email:
             raise ValueError('Email is required')
 
@@ -22,6 +22,7 @@ class UserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             username=username,
+            is_seller=is_seller,
             **extra_fields
         )
         user.set_password(password)
@@ -31,7 +32,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
-        return self.create_user(email, password, **extra_fields)
+        return self.create_user(email, password, is_seller=False, **extra_fields)
 
     def generate_unique_username(self, base_username):
         from django.utils.text import slugify
@@ -51,6 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    is_seller = models.BooleanField(default=False) 
     email_verified = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
 

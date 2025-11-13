@@ -3,8 +3,11 @@
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
+import useRedirectIfAuthenticated from '@/utils/useRedirectIfAuthenticated';
 
 export default function LoginPage() {
+  useRedirectIfAuthenticated();
+  
   const { login } = useAuth();
   const router = useRouter();
 

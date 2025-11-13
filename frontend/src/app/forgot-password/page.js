@@ -2,8 +2,11 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import useRedirectIfAuthenticated from '@/utils/useRedirectIfAuthenticated';
 
 export default function ForgotPasswordPage() {
+  useRedirectIfAuthenticated();
+
   const { forgotPassword } = useAuth();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);

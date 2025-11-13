@@ -7,7 +7,7 @@ It provides secure user authentication, product listings, cart, checkout, and or
 
 ## 🚀 Features
 - User Accounts & Authentication (JWT)
-- Product Listings & Search
+- Product Listings with filter features
 - Shopping Cart & Checkout
 - Order Management
 - Payment Integration (Stripe or Flutterwave or Paystack or monnify)
@@ -17,9 +17,9 @@ It provides secure user authentication, product listings, cart, checkout, and or
 
 ## 🛠️ Tech Stack
 **Backend:** Django, Django REST Framework  
-**Database:** PostgreSQL (recommended)  
+**Database:** PostgreSQL (recommended), sqlite3 (for development) 
 **Frontend:** Next.js (separate repo or folder)  
-**Deployment:** Docker + GitHub Actions + Cloud Provider (e.g., Render, Railway, or AWS)
+**Deployment:** Docker + GitHub Actions + Cloud Provider (e.g., Render - frontend, Railway, or AWS - backend)
 
 ---
 
@@ -28,7 +28,7 @@ It provides secure user authentication, product listings, cart, checkout, and or
 ### 1. Clone the Repo
 ```bash
 git clone https://github.com/Bulwark-inc/medinn.git
-cd medinn
+cd medinn/backend/
 ```
 
 ### 2. Create Virtual Environment

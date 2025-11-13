@@ -2,25 +2,15 @@
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 const ProtectedRoute = ({ children }) => {
-  const { user, fetchUser } = useAuth();
+  const { user, loading } = useAuth(); // Get user and loading state from context
   const router = useRouter();
-  const [loading, setLoading] = useState(true); // Track loading state
-
-  useEffect(() => {
-    // If user is null, fetch the user
-    if (user === null) {
-      fetchUser().finally(() => setLoading(false));  // Fetch user and then stop loading
-    } else {
-      setLoading(false);  // If user is already set, stop loading
-    }
-  }, [user, fetchUser]);
 
   useEffect(() => {
     if (user === null && !loading) {
-      router.push('/login');  // Redirect to login if no user after loading
+      router.push('/login'); // Redirect to login if no user is found after loading
     }
   }, [user, router, loading]);
 
@@ -28,7 +18,7 @@ const ProtectedRoute = ({ children }) => {
     return <div>Loading...</div>; // Optionally, show a loading spinner or message
   }
 
-  return <>{children}</>;  // Render protected content
+  return <>{children}</>;  // Render protected content if user is authenticated
 };
 
 export default ProtectedRoute;
