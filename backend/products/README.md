@@ -196,3 +196,95 @@ router.register(r'votes', ReviewHelpfulVoteViewSet, basename='vote')
 urlpatterns = [
     path('', include(router.urls)),
 ]
+
+
+# API Endpoints for Products (Samples)
+
+## 1. API Endpoints
+
+Based on the backend code, here are the relevant endpoints for managing products:
+
+### `GET /products/`
+- **Description**: Retrieve a list of active products.
+
+### `GET /products/{id}/`
+- **Description**: Retrieve a single product by its ID.
+
+### `POST /products/`
+- **Description**: Create a new product (only accessible by sellers).
+
+### `PUT /products/{id}/`
+- **Description**: Update an existing product (only accessible by the products seller or admins).
+
+### `DELETE /products/{id}/`
+- **Description**: Delete a product (only accessible by the products seller or admins).
+
+## 2. Endpoint Parameters and Expected Data
+
+### `GET /products/`
+
+#### Query Parameters:
+
+- `category`: Filter by category (optional).
+- `min_price`: Minimum price for filtering products (optional).
+- `max_price`: Maximum price for filtering products (optional).
+- `min_rating`: Minimum average rating for filtering products (optional).
+- `in_stock`: Filter to show products in stock (optional).
+- `search`: Search products by name or description (optional).
+- `ordering`: Define ordering, e.g., price, created_at, average_rating (optional).
+
+### `POST /products/`
+
+#### Request Body (to create a product):
+```json
+{
+  "name": "Product Name",
+  "description": "Product Description",
+  "price": 100.00,
+  "stock": 50,
+  "category": 1,  // Category ID
+  "image": "<file> (optional)",
+  "is_active": true
+}
+```
+- Note: The seller will be automatically assigned from the authenticated user.
+
+### `GET /products/{id}/`
+
+#### Response Body (Product data):
+```json
+{
+  "id": 1,
+  "name": "Product Name",
+  "slug": "product-name",
+  "description": "Product Description",
+  "price": 100.00,
+  "stock": 50,
+  "category": { "id": 1, "name": "Category Name" },
+  "seller": "seller_name",
+  "average_rating": 4.5,
+  "review_count": 20,
+  "is_active": true,
+  "created_at": "2023-01-01T00:00:00Z",
+  "updated_at": "2023-01-10T00:00:00Z"
+}
+```
+
+### `PUT /products/{id}/`
+
+#### Request Body (to update a product):
+```json
+{
+  "name": "Updated Product Name",
+  "description": "Updated Product Description",
+  "price": 120.00,
+  "stock": 60,
+  "category": 1,  // Category ID
+  "image": "<file> (optional)",
+  "is_active": true
+}
+```
+
+### `DELETE /products/{id}/`
+
+#### Request Body: No request body—just DELETE the product.

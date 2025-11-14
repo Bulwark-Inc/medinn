@@ -18,6 +18,7 @@ export default function ProductDetail() {
     isLoading,
     isError
   } = useProductBySlug(slug);
+  console.log("Fetched product:", product);
 
   const productId = product?.id; 
 

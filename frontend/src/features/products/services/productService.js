@@ -4,7 +4,8 @@ import api from '@/utils/api';
 export const getProducts = async (filters = {}) => {
   try {
     const response = await api.get('/products/products', { params: filters });
-    return response.data.results;
+    console.log('1. Fetched products:', response.data);
+    return response.data;
   } catch (error) {
     console.error('Error fetching products:', error);
     throw error;
@@ -26,6 +27,7 @@ export const getCategories = async () => {
 export const getProductById = async (id) => {
   try {
     const response = await api.get(`/products/products/${id}/`);
+    console.log('2. product response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching product:', error);

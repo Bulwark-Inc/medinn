@@ -5,16 +5,16 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth(); // Get user and loading state from context
+  const { user, isLoading } = useAuth(); // Get user and loading state from context
   const router = useRouter();
 
   useEffect(() => {
-    if (user === null && !loading) {
+    if (user === null && !isLoading) {
       router.push('/login'); // Redirect to login if no user is found after loading
     }
-  }, [user, router, loading]);
+  }, [user, router, isLoading]);
 
-  if (loading) {
+  if (isLoading) {
     return <div>Loading...</div>; // Optionally, show a loading spinner or message
   }
 

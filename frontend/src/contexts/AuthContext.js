@@ -21,6 +21,7 @@ const AuthContext = createContext({
 
 export const AuthProvider = ({ children }) => {
   const queryClient = useQueryClient();
+  const [hasMounted, setHasMounted] = useState(false);
 
   // Check if token exists in localStorage
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
@@ -74,9 +75,14 @@ export const AuthProvider = ({ children }) => {
   
   // Determine authentication status
   const isAuthenticated = !!user;
+  
+  useEffect(() => {
+    // This runs only on the client after the initial render (hydration)
+    setHasMounted(true);
+  }, []);
 
   // Display loading state during initial user check
-  if (isInitialLoading) {
+  if (!hasMounted || isInitialLoading) {
     return <div>Loading App...</div>;
   }
 
