@@ -8,6 +8,8 @@ import {
   register as registerService,
 } from '@/features/auth/services/authService';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import useCartStore from '@/features/cart/store/useCartStore';
+
 
 // Create authentication context with default values
 const AuthContext = createContext({
@@ -22,6 +24,7 @@ const AuthContext = createContext({
 export const AuthProvider = ({ children }) => {
   const queryClient = useQueryClient();
   const [hasMounted, setHasMounted] = useState(false);
+  const clearCart = useCartStore((state) => state.clearCartLocal);
 
   // Check if token exists in localStorage
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
@@ -58,6 +61,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     await logoutService();
     // Clear user cache after logout
+    clearCart();
     queryClient.setQueryData(['currentUser'], null);
     await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
   };
