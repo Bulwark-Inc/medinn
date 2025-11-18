@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     # 3rd party app
     'corsheaders',
     'rest_framework',
+    'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     
     # custom app
@@ -89,32 +90,70 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'accounts.User'
 
+FRONTEND_URL = "http://localhost:5173"
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Next.js frontend
+    FRONTEND_URL,
 ]
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
+    FRONTEND_URL,
 ]
 
+# REST Framework Settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/hour',
+        'user': '1000/hour',
+        'login': '5/15m',
+        'password_reset': '3/hour',
+        'email_verification': '3/hour',
+        'register': '3/hour',
+    },
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
 }
 
+# JWT Settings
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
-    "AUTH_HEADER_TYPES": ("Bearer",),
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
+    
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
+# Email Configuration (update in prod.py with real SMTP settings)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For development
-DEFAULT_FROM_EMAIL = 'no-reply@yourdomain.com'  # Use a real sender in production
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # For production
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'your-email@gmail.com'
+# EMAIL_HOST_PASSWORD = 'your-app-password'
+DEFAULT_FROM_EMAIL = 'MedInn <noreply@medinn.com>'
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
@@ -130,5 +169,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-FRONTEND_URL = "http://localhost:5173"
