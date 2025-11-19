@@ -9,6 +9,7 @@ urlpatterns = [
     path("api/v1/auth/", include("accounts.urls")),
     path("api/v1/products/", include("products.urls")),
     path("api/v1/cart/", include("carts.urls")),
+    path("api/v1/profiles/", include("profiles.urls")),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
