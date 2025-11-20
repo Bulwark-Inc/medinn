@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import useRedirectIfAuthenticated from '@/utils/useRedirectIfAuthenticated';
+import { resendVerificationEmail } from '@/features/auth/services/authService';
+import Link from 'next/link';
 
 export default function LoginPage() {
   useRedirectIfAuthenticated();
@@ -15,19 +17,46 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showEmailNotVerified, setShowEmailNotVerified] = useState(false);
+  const [resendingEmail, setResendingEmail] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setShowEmailNotVerified(false);
+    setResendSuccess(false);
     setLoading(true);
 
     try {
       await login(email, password);
-      router.push('/dashboard'); // redirect on success
+      router.push('/dashboard');
     } catch (err) {
-      setError('Invalid email or password.');
+      // Check if error is about email verification
+      if (err.message === 'EMAIL_NOT_VERIFIED') {
+        setShowEmailNotVerified(true);
+        setError('Your email is not verified. Please check your inbox or click below to resend the verification email.');
+      } else {
+        setError(err.message || 'Invalid email or password.');
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    setResendingEmail(true);
+    setError('');
+    setResendSuccess(false);
+
+    try {
+      await resendVerificationEmail(email);
+      setResendSuccess(true);
+      setShowEmailNotVerified(false);
+    } catch (err) {
+      setError(err.message || 'Failed to resend verification email.');
+    } finally {
+      setResendingEmail(false);
     }
   };
 
@@ -68,7 +97,31 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+              {error}
+            </div>
+          )}
+
+          {showEmailNotVerified && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
+              <p className="text-sm text-yellow-800 mb-2">
+                Your email is not verified. Please check your inbox.
+              </p>
+              <button
+                type="button"
+                onClick={handleResendVerification}
+                disabled={resendingEmail}
+                className="text-sm text-indigo-600 hover:text-indigo-800 font-medium disabled:opacity-50"
+              >
+                {resendingEmail ? 'Sending...' : 'Resend verification email'}
+              </button>
+            </div>
+          )}
+
+          {resendSuccess && (
+            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md text-sm">
+              Verification email sent! Please check your inbox.
+            </div>
           )}
 
           <button
@@ -80,24 +133,23 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="text-sm text-center mt-4 text-gray-600">
+        <div className="text-sm text-center mt-4 text-gray-600 space-y-2">
           <p>
-            Forgot your password?{' '}
-            <a
+            <Link
               href="/forgot-password"
               className="text-indigo-600 hover:text-indigo-800 font-medium"
             >
-              Reset it
-            </a>
+              Forgot your password?
+            </Link>
           </p>
-          <p className="mt-1">
-            Don’t have an account?{' '}
-            <a
+          <p>
+            Don't have an account?{' '}
+            <Link
               href="/register"
               className="text-indigo-600 hover:text-indigo-800 font-medium"
             >
               Create one
-            </a>
+            </Link>
           </p>
         </div>
       </div>
